@@ -1,5 +1,4 @@
-import java.awt.*;
-
+// Aarav Gupta
 public class Die
 {
     /** Instance Variables **/

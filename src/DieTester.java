@@ -1,3 +1,5 @@
+// Aarav Gupta
+
 import java.util.Scanner;
 
 public class DieTester
