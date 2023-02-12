@@ -1,22 +1,25 @@
+import java.lang.annotation.Target;
 import java.util.Scanner;
 
 public class DieTester
 {
     // Instance Variables
     private String input;
-    private int defaultTargetNum;
-    private int randomTargetNum;
+    private int TargetNum;
     private int playerOneSides;
     private int playerTwoSides;
     private int playerOneRoll;
     private int playerTwoRoll;
-    private DieTesterView d;
+    private DieTesterView window;
+    private int checkPlayer;
+    private int checkWinner;
+    // int player turn (for getter method)
 
     public DieTester()
     {
+        window = new DieTesterView(this);
         input = "";
-        defaultTargetNum = 0;
-        randomTargetNum = 0;
+        TargetNum = 0;
         playerOneSides = 0;
         playerTwoSides = 0;
         playerOneRoll = 0;
@@ -25,19 +28,17 @@ public class DieTester
     public void printInstructions()
     {
         // Instructions
-        System.out.println("This is a two player dice game.");
+        System.out.println("This is a two player dice game. The goal of the game is to roll a di that is " +
+                "closest to the target number. ");
+        System.out.print("The game starts off with a player choosing the target number. ");
+        System.out.print("The first player chooses the number of sides they want and rolls a" +
+                " di based on that number of sides.");
         System.out.println();
-        System.out.print("The first player chooses the number of sides they");
-        System.out.println("want and rolls a\ndi based on that number of sides.");
+        System.out.print("The second player follows a similar process, choosing the number of sides they want and" +
+                " rolling a di based on that number of sides.");
         System.out.println();
-        System.out.print("The second player follows a similar process,");
-        System.out.print("choosing the number ofsides they want and rolling a di");
-        System.out.println("based on that number of sides.");
+        System.out.print("Whoever rolls a number closer to the target number wins. ");
         System.out.println();
-        System.out.print("Whoever rolls a number closer to the target number");
-        System.out.println("wins");
-        System.out.print("You can choose between a default target num or a");
-        System.out.println("random target num");
         System.out.println();
     }
 
@@ -47,20 +48,11 @@ public class DieTester
         boolean valid = false;
         Scanner a = new Scanner(System.in);
         Die sample = new Die();
-        defaultTargetNum = sample.defaultTargetNum();
-        randomTargetNum = sample.getTargetNum();
-        System.out.print("Enter the letter d if you want the default target");
-        System.out.println("num or enter r if you want a random target num: ");
-        input = a.nextLine();
-        // Prints target number depending on user input 
-        if (input.equals("d"))
-        {
-            System.out.println("The target number is " + defaultTargetNum +"\n");
-        }
-        else if (input.equals("r"))
-        {
-            System.out.println("The target number is " + randomTargetNum +"\n");
-        }
+        TargetNum = sample.getTargetNum();
+        System.out.print("Click any character to get the target num: ");
+        a.nextLine();
+        // Prints target number
+        System.out.println("The target number is " + TargetNum +"\n");
     }
 
     public void playerOneDie()
@@ -80,7 +72,7 @@ public class DieTester
 
     public void playerTwoDie()
     {
-        // Creates die for Player 2 
+        // Creates die for Player 2
         Scanner a = new Scanner(System.in);
         System.out.println("Player 2's turn: ");
         System.out.println("How many sides do you want?");
@@ -93,54 +85,80 @@ public class DieTester
         System.out.println();
     }
 
+
     public void determineWinner()
     {
-        // Determines winner if player inputted d 
-        if (input.equals("d"))
+        // Determines winner
+        if (Math.abs(playerOneRoll - TargetNum) >
+                Math.abs(playerTwoRoll - TargetNum))
         {
-            if (Math.abs(playerOneRoll - defaultTargetNum) >
-                    Math.abs(playerTwoRoll - defaultTargetNum))
-            {
-                System.out.println("Player 2 wins!");
-            }
-            else if (Math.abs(playerTwoRoll - defaultTargetNum) >
-                    Math.abs(playerOneRoll - defaultTargetNum))
-            {
-                System.out.println("Player 1 wins!");
-            }
-            else
-            {
-                tie();
-            }
+            checkWinner = 2;
+            System.out.println("Player 2 wins!");
         }
-        // Determines winner if player inputted r 
-        if (input.equals("r"))
+        else if (Math.abs(playerTwoRoll - TargetNum) >
+                Math.abs(playerOneRoll - TargetNum))
         {
-            if (Math.abs(playerOneRoll - randomTargetNum) >
-                    Math.abs(playerTwoRoll - randomTargetNum))
-            {
-                System.out.println("Player 2 wins!");
-            }
-            else if (Math.abs(playerTwoRoll - randomTargetNum) >
-                    Math.abs(playerOneRoll - randomTargetNum))
-            {
-                System.out.println("Player 1 wins!");
-            }
-            else
-            {
-                tie();
-            }
+            checkWinner = 1;
+            System.out.println("Player 1 wins!");
+        }
+        else
+        {
+            checkWinner = 3;
+            tie();
         }
     }
 
+    public int getCheckPlayer()
+    {
+        return checkPlayer;
+    }
+
+    public int getPlayerOneRoll()
+    {
+        return playerOneRoll;
+    }
+
+    public int getPlayerTwoRoll()
+    {
+        return playerTwoRoll;
+    }
+
+    public int getTargetNumber()
+    {
+        return TargetNum;
+    }
+
+    public int getCheckWinner()
+    {
+        return checkWinner;
+    }
+
+
+    // Add check player to end of methods
     public void playGame()
     {
+        Scanner s = new Scanner(System.in);
         printInstructions();
+        window.repaint();
         createTargetNum();
+        checkPlayer = 3;
+        window.repaint();
+        System.out.println("Enter any character to continue: ");
+        s.nextLine();
+        window.repaint();
+        checkPlayer = 1;
         playerOneDie();
+        window.repaint();
         System.out.println();
+        System.out.println("Player 2, enter any character to continue: ");
+        s.nextLine();
+        System.out.println();
+        checkPlayer = 2;
+        window.repaint();
         playerTwoDie();
+        window.repaint();
         determineWinner();
+        window.repaint();
     }
     public static void main(String[] args)
     {

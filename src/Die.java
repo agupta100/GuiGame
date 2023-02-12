@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Die
 {
     /** Instance Variables **/
@@ -46,12 +48,7 @@ public class Die
     // Gets random target num
     public int getTargetNum()
     {
-        return (int)(Math.random() * 50) + 1;
-    }
-
-    public int defaultTargetNum()
-    {
-        return (int)((Math.random() * 10) + 1);
+        return (int)(Math.random() * 6) + 1;
     }
 
 
@@ -74,4 +71,5 @@ public class Die
     public String toString() {
         return "For a " + sides + " sided die:";
     }
+
 }
